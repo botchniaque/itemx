@@ -2,15 +2,15 @@ package main
 
 import (
 	"fmt"
-	"html"
 	"log"
 	"net/http"
 
 	"github.com/gorilla/mux"
+	json2 "encoding/json"
 )
 
 type Item struct {
-	name string
+	Name string `json:"name"`
 }
 
 func main() {
@@ -23,6 +23,6 @@ func main() {
 func Index(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 	var name string = r.Form.Get("name")
-	fmt.Printf("%+v\n", Item{name})
-	fmt.Fprintf(w, "Hello, %q", html.EscapeString(r.URL.Path))
+	var json, _ = json2.Marshal(&Item{Name: name})
+	fmt.Fprint(w, string(json))
 }
